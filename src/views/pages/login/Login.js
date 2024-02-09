@@ -117,8 +117,9 @@ const Login = () => {
                   <div>
                     <h2>Sign up</h2>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
+                      Welcome to our Aquamon platform! To get started, please sign up for your
+                      account. Dive into the world of aquatic care, track your fishs health, and
+                      create a personalized aquatic haven.
                     </p>
                     <Link to="/register">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>

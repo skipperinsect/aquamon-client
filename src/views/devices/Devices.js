@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import {
   CCard,
@@ -14,11 +14,21 @@ import {
   CPagination,
   CPaginationItem,
   CBadge,
+  CDropdown,
+  CDropdownMenu,
+  CDropdownItem,
+  CDropdownToggle,
 } from '@coreui/react'
+import { cilOptions } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { deleteDevice, getAllDevice } from 'src/redux/actions/device'
 import { getAllLogDatas } from 'src/redux/actions/device'
+import DeleteDeviceModal from 'src/components/Devices/DeleteDeviceModal'
+import UpdateDeviceModal from 'src/components/Devices/UpdateDeviceModal'
 
 const formatDate = (dateString) => {
   const options = {
@@ -34,23 +44,29 @@ const formatDate = (dateString) => {
 
 const Devices = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const { code } = useParams()
   const devices = useSelector((state) => state.device.logDatas)
+  const auth = useSelector((state) => state.auth)
+
+  const [visibleDelete, setVisibleDelete] = useState(false)
+  const [visibleUpdate, setVisibleUpdate] = useState(false)
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     dispatch(getAllLogDatas(code, { page: 1, pageSize: 10 }))
   }, [code, dispatch])
 
   const getLogs = useCallback(
-    (page) => {
-      dispatch(getAllLogDatas(code, { page, pageSize: 10 }))
+    (pageIn) => {
+      setPage(pageIn)
+      dispatch(getAllLogDatas(code, { page: pageIn, pageSize: 10 }))
     },
     [dispatch, code],
   )
 
   const maxVisiblePages = 3
-
   const renderPaginationItems = (totalPages, currentPage) => {
     const items = []
 
@@ -73,18 +89,38 @@ const Devices = () => {
     return items
   }
 
+  const deleteDevices = useCallback(() => {
+    dispatch(deleteDevice(code)).then(async (response) => {
+      await dispatch(getAllDevice())
+      navigate('/')
+    })
+  }, [code, dispatch, navigate])
+
   return (
     <>
       {devices && (
         <CCard className="mb-4" key={devices.content.code}>
           <CCardBody>
             <CRow>
-              <CCol sm={5}>
+              <CCol xs={11} md={11} xl={11}>
                 <h4 id="traffic" className="card-title mb-0">
                   {devices.content.name}
                 </h4>
                 <div className="small text-body-secondary">{devices.content.code}</div>
               </CCol>
+              {auth.role === 1 && (
+                <CCol xs={1} md={1} xl={1} className="d-md-block">
+                  <CDropdown alignment="end" className="float-end">
+                    <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
+                      <CIcon icon={cilOptions} />
+                    </CDropdownToggle>
+                    <CDropdownMenu>
+                      <CDropdownItem onClick={() => setVisibleUpdate(true)}>Edit</CDropdownItem>
+                      <CDropdownItem onClick={() => setVisibleDelete(true)}>Delete</CDropdownItem>
+                    </CDropdownMenu>
+                  </CDropdown>
+                </CCol>
+              )}
             </CRow>
             <br />
             {devices.content.LogDatas.length >= 1 && (
@@ -98,7 +134,7 @@ const Devices = () => {
                             Total dissolved solids
                           </div>
                           <div className="fs-5 fw-semibold">
-                            {devices.status ? devices.status.tds : 'NULL'}
+                            {devices.status ? devices.status.tds : 'No Data'}
                           </div>
                         </div>
                       </CCol>
@@ -106,7 +142,7 @@ const Devices = () => {
                         <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
                           <div className="text-body-secondary text-truncate small">Temperature</div>
                           <div className="fs-5 fw-semibold">
-                            {devices.status ? devices.status.temp : 'NULL'}
+                            {devices.status ? devices.status.temp : 'No Data'}
                           </div>
                         </div>
                       </CCol>
@@ -115,14 +151,28 @@ const Devices = () => {
                   <CCol xs={12} md={6} xl={6}>
                     <CRow>
                       <CCol xs={6}>
-                        <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
+                        <div className="border-start border-start-4 border-start-primary py-1 px-3 mb-3">
                           <div className="text-body-secondary text-truncate small">Status</div>
                           <div className="fs-5 fw-semibold">
                             {devices.status
                               ? devices.status.status === 1
                                 ? 'Good'
                                 : 'Bad'
-                              : 'NULL'}
+                              : 'No Data'}
+                          </div>
+                        </div>
+                      </CCol>
+                      <CCol xs={6}>
+                        <div className="border-start border-start-4 border-start-warning py-1 px-3 mb-3">
+                          <div className="text-body-secondary text-truncate small">
+                            Feeding Status
+                          </div>
+                          <div className="fs-5 fw-semibold">
+                            {devices.status
+                              ? devices.status.feeding
+                                ? 'Already'
+                                : 'Not Yet'
+                              : 'No Data'}
                           </div>
                         </div>
                       </CCol>
@@ -202,6 +252,20 @@ const Devices = () => {
               </CRow>
             </CRow>
           </CCardBody>
+          <DeleteDeviceModal
+            visible={visibleDelete}
+            setVisible={setVisibleDelete}
+            deleteDevice={deleteDevices}
+          ></DeleteDeviceModal>
+          <UpdateDeviceModal
+            visible={visibleUpdate}
+            setVisible={setVisibleUpdate}
+            code={code}
+            nameDevice={devices.content.name}
+            reload={() => {
+              getLogs(page)
+            }}
+          ></UpdateDeviceModal>
         </CCard>
       )}
     </>
