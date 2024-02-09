@@ -20,11 +20,29 @@ const getAllLogDatas = (code, params) => {
   })
 }
 
+const deleteDevice = (code) => {
+  return Api.delete(`/devices/${code}`, {
+    headers: AuthHeader(),
+  })
+}
+
+const updateDevice = (code, name) => {
+  return Api.put(
+    `/devices/${code}`,
+    { name },
+    {
+      headers: AuthHeader(),
+    },
+  )
+}
+
 const DeviceService = {
   createDevice,
   getAllDevice,
   getAllDeviceWithStatus,
   getAllLogDatas,
+  deleteDevice,
+  updateDevice,
 }
 
 export default DeviceService

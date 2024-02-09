@@ -3,6 +3,8 @@ import {
   GET_DEVICES,
   GET_DEVICES_WITH_STATUS,
   GET_LOG_WITH_DEVICE,
+  DELETE_DEVICE,
+  UPDATE_DEVICE,
   SET_MESSAGE,
 } from './types'
 
@@ -89,6 +91,50 @@ export const getAllLogDatas = (code, params) => async (dispatch) => {
     (response) => {
       dispatch({
         type: GET_LOG_WITH_DEVICE,
+        payload: response.data,
+      })
+
+      sendMessage('success', response.data.message)
+
+      return Promise.resolve()
+    },
+    (error) => {
+      const message = error.response
+
+      sendMessage('error', message.data.message)
+
+      return error
+    },
+  )
+}
+
+export const deleteDevice = (code) => async (dispatch) => {
+  return DeviceService.deleteDevice(code).then(
+    (response) => {
+      dispatch({
+        type: DELETE_DEVICE,
+        payload: response.data,
+      })
+
+      sendMessage('success', response.data.message)
+
+      return Promise.resolve()
+    },
+    (error) => {
+      const message = error.response
+
+      sendMessage('error', message.data.message)
+
+      return error
+    },
+  )
+}
+
+export const updateDevice = (code, name) => async (dispatch) => {
+  return DeviceService.updateDevice(code, name).then(
+    (response) => {
+      dispatch({
+        type: UPDATE_DEVICE,
         payload: response.data,
       })
 

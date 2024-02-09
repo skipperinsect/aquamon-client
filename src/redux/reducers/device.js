@@ -3,6 +3,8 @@ import {
   GET_DEVICES,
   GET_DEVICES_WITH_STATUS,
   GET_LOG_WITH_DEVICE,
+  DELETE_DEVICE,
+  UPDATE_DEVICE,
 } from '../actions/types'
 
 const initialState = {
@@ -27,6 +29,10 @@ const deviceReducer = (state = initialState, action) => {
         ...state,
         deviceStatus: payload,
       }
+    case DELETE_DEVICE:
+      return state
+    case UPDATE_DEVICE:
+      return state
     case GET_LOG_WITH_DEVICE:
       return {
         ...state,

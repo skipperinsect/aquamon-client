@@ -12,7 +12,7 @@ const user = JSON.parse(localStorage.getItem('user'))
 const initialState = user
   ? {
       isLoggedIn: true,
-      role: 0,
+      role: user.role,
       user,
     }
   : {
