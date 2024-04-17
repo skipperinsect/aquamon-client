@@ -40,7 +40,7 @@ const AppSidebar = () => {
       return {
         component: CNavItem,
         name: dvc.code,
-        to: `/devices/${dvc.code}`,
+        href: `/devices/${dvc.code}`,
       }
     })
   }, [devices])

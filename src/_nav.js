@@ -7,7 +7,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Dashboard',
-    to: '/dashboard',
+    href: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
   {
@@ -17,7 +17,7 @@ const _nav = [
   {
     component: CNavGroup,
     name: 'Devices',
-    to: '/devices',
+    href: '/devices',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
     items: [],
   },

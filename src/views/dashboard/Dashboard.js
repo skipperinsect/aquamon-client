@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
+import { Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -93,7 +94,12 @@ const Dashboard = () => {
     setVisibleUpdate(false)
     setCode('')
     setName('')
-  }, [])
+  }, [setVisible, setVisibleDelete, setVisibleUpdate, setCode, setName])
+
+  const linkStyle = {
+    textDecoration: 'none',
+    color: 'inherit',
+  }
 
   return (
     <>
@@ -118,10 +124,19 @@ const Dashboard = () => {
             <CCardBody>
               <CRow>
                 <CCol xs={11} md={11} xl={11}>
-                  <h4 id="traffic" className="card-title mb-0">
-                    {dvc.name}
-                  </h4>
-                  <div className="small text-body-secondary">{dvc.code}</div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Link to={`/devices/${dvc.code}`} style={linkStyle}>
+                      <h4 id="traffic" className="card-title mb-0">
+                        {dvc.name}
+                      </h4>
+                      <div className="small text-body-secondary">{dvc.code}</div>
+                    </Link>
+                    <Link to={`/devices/${dvc.code}`} style={{ marginLeft: '20px' }}>
+                      <CButton color="primary" className="ml-2">
+                        Go to Device
+                      </CButton>
+                    </Link>
+                  </div>
                 </CCol>
                 {auth.role === 1 && (
                   <CCol xs={1} md={1} xl={1} className="d-md-block">

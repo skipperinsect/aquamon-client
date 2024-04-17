@@ -1,11 +1,11 @@
 import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
-
 import { CBadge } from '@coreui/react'
 
 export const AppSidebarNav = ({ items }) => {
   const location = useLocation()
+
   const navLink = (name, icon, badge, indent = false) => {
     return (
       <>
@@ -27,11 +27,11 @@ export const AppSidebarNav = ({ items }) => {
   }
 
   const navItem = (item, index, indent = false) => {
-    const { component, name, badge, icon, ...rest } = item
-    const Component = component
+    const { component: Component, name, badge, icon, ...rest } = item
+
     return (
       <Component
-        {...(rest.to &&
+        {...(rest.href &&
           !rest.items && {
             component: NavLink,
           })}
@@ -42,20 +42,21 @@ export const AppSidebarNav = ({ items }) => {
       </Component>
     )
   }
+
   const navGroup = (item, index) => {
-    const { component, name, icon, items, to, ...rest } = item
-    const Component = component
+    const { component: Component, name, icon, items, href, ...rest } = item
+
     return (
       <Component
         compact
         idx={String(index)}
         key={index}
         toggler={navLink(name, icon)}
-        visible={location.pathname.startsWith(to)}
+        visible={href ? location.pathname.startsWith(href) : true}
         {...rest}
       >
-        {item.items?.map((item, index) =>
-          item.items ? navGroup(item, index) : navItem(item, index, true),
+        {items?.map((subItem, subIndex) =>
+          subItem.items ? navGroup(subItem, subIndex) : navItem(subItem, subIndex, true),
         )}
       </Component>
     )
