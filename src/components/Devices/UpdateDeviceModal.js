@@ -14,7 +14,7 @@ import {
   CFormInput,
 } from '@coreui/react'
 
-import { updateDevice } from 'src/redux/actions/device'
+import { updateDevice, getAllDeviceWithStatus } from 'src/redux/actions/device'
 import { useDispatch } from 'react-redux'
 
 const UpdateDeviceModal = ({ visible, setVisible, code, nameDevice, reload }) => {
@@ -41,12 +41,12 @@ const UpdateDeviceModal = ({ visible, setVisible, code, nameDevice, reload }) =>
         } catch (error) {
           setVisible(true)
         } finally {
+          dispatch(getAllDeviceWithStatus())
           setValidated(true)
-          reload()
         }
       }
     },
-    [setValidated, setVisible, code, name, dispatch, reload],
+    [setValidated, setVisible, code, name, dispatch],
   )
 
   return (

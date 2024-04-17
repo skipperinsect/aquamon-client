@@ -58,7 +58,6 @@ const Dashboard = () => {
       await dispatch(getAllDevice())
       await dispatch(getAllDeviceWithStatus())
       closeModal()
-      window.location.reload()
     })
   }, [code, dispatch])
 
@@ -77,7 +76,6 @@ const Dashboard = () => {
           setName('')
           await dispatch(getAllDevice())
           await dispatch(getAllDeviceWithStatus())
-          window.location.reload()
         } catch (error) {
           setVisible(true)
         } finally {

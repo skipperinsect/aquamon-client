@@ -18,6 +18,7 @@ import {
   CDropdownMenu,
   CDropdownItem,
   CDropdownToggle,
+  CSpinner,
 } from '@coreui/react'
 import { cilOptions } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
@@ -53,6 +54,7 @@ const Devices = () => {
   const [visibleDelete, setVisibleDelete] = useState(false)
   const [visibleUpdate, setVisibleUpdate] = useState(false)
   const [page, setPage] = useState(1)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     dispatch(getAllLogDatas(code, { page: 1, pageSize: 10 }))
@@ -61,7 +63,9 @@ const Devices = () => {
   const getLogs = useCallback(
     (pageIn) => {
       setPage(pageIn)
+      setLoading(true)
       dispatch(getAllLogDatas(code, { page: pageIn, pageSize: 10 }))
+      setLoading(false)
     },
     [dispatch, code],
   )
@@ -102,6 +106,7 @@ const Devices = () => {
         <CCard className="mb-4" key={devices.content.code}>
           <CCardBody>
             <CRow>
+              {loading && <CSpinner />}
               <CCol xs={11} md={11} xl={11}>
                 <h4 id="traffic" className="card-title mb-0">
                   {devices.content.name}
