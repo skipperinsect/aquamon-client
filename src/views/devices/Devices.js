@@ -70,7 +70,7 @@ const Devices = () => {
     [dispatch, code],
   )
 
-  const maxVisiblePages = 3
+  const maxVisiblePages = 2
   const renderPaginationItems = (totalPages, currentPage) => {
     const items = []
 
@@ -213,7 +213,13 @@ const Devices = () => {
                         <div>{(devices.page - 1) * 10 + index + 1}</div>
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
-                        <div>{formatDate(item.createdAt)}</div>
+                        <div
+                          style={{
+                            width: '200px',
+                          }}
+                        >
+                          {formatDate(item.createdAt)}
+                        </div>
                       </CTableDataCell>
                       <CTableDataCell className="text-center">
                         <div>{item.tds}</div>
